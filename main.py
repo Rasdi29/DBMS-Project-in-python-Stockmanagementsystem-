@@ -63,7 +63,7 @@ def generateRand():
         itemId = itemId + str(numeric[randno])
     randno = random.randrange(0, (len(alpha) - 1))
     itemId = itemId + '-' + str(alpha[randno])
-    print("generated: " + itemId)
+    print("generated: " + itemId)#chech
     setph(itemId, 0)
 
 
@@ -108,7 +108,7 @@ def save():
         for num in range(0,5):
             setph('',(num))
     except Exception as e:
-        print(e)
+        print(e)#check
         messagebox.showwarning("","Error while saving ref: "+str(e))
         return
     refreshTable()
@@ -120,7 +120,7 @@ def update():
         selectedItemId = str(my_tree.item(selectedItem)['values'][0])
     except:
         messagebox.showwarning("", "Please select a data row")
-    print(selectedItemId)
+    print(selectedItemId)#check
     itemId = str(itemIdEntry.get())
     name = str(nameEntry.get())
     price = str(priceEntry.get())
