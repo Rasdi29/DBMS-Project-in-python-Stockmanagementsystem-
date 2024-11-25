@@ -6,7 +6,7 @@ import random
 import pymysql
 import csv
 from datetime import datetime
-import numpy as np
+
 
 window=tkinter.Tk()
 window.title("Stock Management System")
