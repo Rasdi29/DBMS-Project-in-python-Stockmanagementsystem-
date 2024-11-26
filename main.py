@@ -63,7 +63,7 @@ def generateRand():
         itemId = itemId + str(numeric[randno])
     randno = random.randrange(0, (len(alpha) - 1))
     itemId = itemId + '-' + str(alpha[randno])
-    print("generated: " + itemId)#chech
+    print("generated: " + itemId)
     setph(itemId, 0)
 
 
@@ -108,42 +108,53 @@ def save():
         for num in range(0,5):
             setph('',(num))
     except Exception as e:
-        print(e)#check
+        print(e)
         messagebox.showwarning("","Error while saving ref: "+str(e))
         return
     refreshTable()
 
 def update():
-    selectedItemId = ''
-    try:
-        selectedItem = my_tree.selection()[0]
-        selectedItemId = str(my_tree.item(selectedItem)['values'][0])
-    except:
-        messagebox.showwarning("", "Please select a data row")
-    print(selectedItemId)#check
     itemId = str(itemIdEntry.get())
     name = str(nameEntry.get())
     price = str(priceEntry.get())
     qnt = str(qntEntry.get())
     cat = str(categoryCombo.get())
-    if not(itemId and itemId.strip()) or not(name and name.strip()) or not(price and price.strip()) or not(qnt and qnt.strip()) or not(cat and cat.strip()):
-        messagebox.showwarning("","Please fill up all entries")
+
+
+    if not (itemId and itemId.strip()) or not (name and name.strip()) or not (price and price.strip()) or not (qnt and qnt.strip()) or not (cat and cat.strip()):
+        messagebox.showwarning("", "Please fill up all entries")
         return
-    if(selectedItemId!=itemId):
-        messagebox.showwarning("","You can't change Item ID")
-        return
+
     try:
+
         cursor.connection.ping()
-        sql=f"UPDATE stocks SET `name` = '{name}', `price` = '{price}', `quantity` = '{qnt}', `category` = '{cat}' WHERE `item_id` = '{itemId}' "
-        cursor.execute(sql)
+        sql_check = f"SELECT * FROM stocks WHERE `item_id` = '{itemId}'"
+        cursor.execute(sql_check)
+        result = cursor.fetchone()
+
+        if not result:
+            messagebox.showwarning("", f"Item ID '{itemId}' does not exist. Cannot update non-existing entry.")
+            return
+
+
+        sql_update = f"""
+            UPDATE stocks 
+            SET `name` = '{name}', `price` = '{price}', `quantity` = '{qnt}', `category` = '{cat}'
+            WHERE `item_id` = '{itemId}'
+        """
+        cursor.execute(sql_update)
         conn.commit()
-        conn.close()
-        for num in range(0,5):
-            setph('',(num))
+
+
+        for num in range(0, 5):
+            setph('', num)
+
+        messagebox.showinfo("", "Record updated successfully")
     except Exception as err:
-        messagebox.showwarning("","Error occured ref: "+str(err))
-        return
-    refreshTable()
+        messagebox.showwarning("", f"Error occurred during update: {err}")
+    finally:
+        refreshTable()
+
 
 def delete():
     try:
@@ -219,7 +230,7 @@ def clear():
 
 def exportExcel():
     cursor.connection.ping()
-    sql=f"SELECT `item_id`, `name`, `price`, `quantity`, `category`, `date` FROM stocks ORDER BY `id` DESC"
+    sql=f"SELECT `item_id`, `name`, `price`, `quantity`, `category`, `date` FROM stocks ORDER BY `item_id` ASC"
     cursor.execute(sql)
     dataraw=cursor.fetchall()
     date = str(datetime.now())
