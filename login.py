@@ -6,7 +6,6 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 
-# Database Connection
 def connection():
     conn = pymysql.connect(
         host='localhost',
@@ -16,23 +15,23 @@ def connection():
     )
     return conn
 
-# Switch to Register Screen
+
 def open_register_screen():
     login_frame.pack_forget()
     register_frame.pack()
 
-# Switch to Login Screen
+
 def open_login_screen():
     register_frame.pack_forget()
     forgot_password_frame.pack_forget()
     login_frame.pack()
 
-# Switch to Forgot Password Screen
+
 def open_forgot_password_screen():
     login_frame.pack_forget()
     forgot_password_frame.pack()
 
-# Handle Registration
+
 def handle_register():
     username = reg_username_entry.get()
     password = reg_password_entry.get()
@@ -54,7 +53,7 @@ def handle_register():
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
 
-# Handle Login
+
 def handle_login(event=None):
     username = login_username_entry.get()
     password = login_password_entry.get()
@@ -80,7 +79,7 @@ def handle_login(event=None):
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
 
-# Forgot Password Functionality
+
 def handle_forgot_password():
     email = forgot_email_entry.get()
 
@@ -105,7 +104,7 @@ def handle_forgot_password():
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
 
-# Send Reset Email with a Custom Message
+
 def send_reset_email(to_email):
     try:
         sender_email = "your_email@gmail.com"  # Gmail address for send the email
@@ -119,22 +118,22 @@ def send_reset_email(to_email):
         body = "Contact with Andalib for assistance."
         msg.attach(MIMEText(body, 'plain'))
 
-        # Connect to Gmail's SMTP server
+
         server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()  # Secure the connection
-        server.login(sender_email, sender_password)  # Log in to the server
-        server.send_message(msg)  # Send the email
-        server.quit()  # Close the server connection
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.send_message(msg)
+        server.quit()
     except Exception as e:
         messagebox.showerror("Error", f"Failed to send email: {e}")
 
-# UI Setup
+
 login_window = Tk()
 login_window.title("Login System")
 login_window.geometry("700x500+410+100")
 login_window.configure(bg="#1e293b")
 
-# Login Frame
+
 login_frame = Frame(login_window, padx=20, pady=20, bg="#ffffff", bd=5, relief=RIDGE)
 login_frame.pack()
 
@@ -152,7 +151,7 @@ Button(login_frame, text="Login", command=handle_login, bg="#4caf50", fg="white"
 Button(login_frame, text="Register", command=open_register_screen, bg="#0073e6", fg="white", width=15, font=("Arial", 10, "bold")).pack(pady=5)
 Button(login_frame, text="Forgot Password", command=open_forgot_password_screen, bg="#f44336", fg="white", width=15, font=("Arial", 10, "bold")).pack(pady=5)
 
-# Register Frame
+
 register_frame = Frame(login_window, padx=20, pady=20, bg="#ffffff", bd=5, relief=RIDGE)
 
 Label(register_frame, text="Register", font=("Helvetica", 18, "bold"), bg="#ffffff", fg="#1e293b").pack(pady=10)
@@ -172,7 +171,7 @@ reg_email_entry.pack(pady=5)
 Button(register_frame, text="Register", command=handle_register, bg="#4caf50", fg="white", width=15, font=("Arial", 10, "bold")).pack(pady=10)
 Button(register_frame, text="Back to Login", command=open_login_screen, bg="#f44336", fg="white", width=15, font=("Arial", 10, "bold")).pack(pady=5)
 
-# Forgot Password Frame
+
 forgot_password_frame = Frame(login_window, padx=20, pady=20, bg="#ffffff", bd=5, relief=RIDGE)
 
 Label(forgot_password_frame, text="Forgot Password", font=("Helvetica", 18, "bold"), bg="#ffffff", fg="#1e293b").pack(pady=10)
@@ -184,7 +183,6 @@ forgot_email_entry.pack(pady=5)
 Button(forgot_password_frame, text="Send Email", command=handle_forgot_password, bg="#0073e6", fg="white", width=15, font=("Arial", 10, "bold")).pack(pady=10)
 Button(forgot_password_frame, text="Back to Login", command=open_login_screen, bg="#f44336", fg="white", width=15, font=("Arial", 10, "bold")).pack(pady=5)
 
-# Start with Login Frame
 login_frame.pack()
 
 login_window.mainloop()
